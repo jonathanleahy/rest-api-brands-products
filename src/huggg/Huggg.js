@@ -17,6 +17,7 @@ export default class Huggg {
      */
     constructor(name) {
         this.db = new alasql.Database();
+        // get the brands data
         const results = fs.readFileSync('./src/data/brands.json', 'utf8', function read(err, data) {
             if (err) {
                 throw err;
@@ -24,8 +25,11 @@ export default class Huggg {
             return data;
         });
         const dataParsed = JSON.parse(results)
+        // parse the brands
         this.db = new Brands(dataParsed.data, this.db)
+        // parse the brands to products
         this.db = new BrandsToProducts(dataParsed.data, this.db)
+        // parse the products
         this.db = new Products(dataParsed.embedded.products, this.db)
     }
 

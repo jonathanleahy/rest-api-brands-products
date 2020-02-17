@@ -5,6 +5,7 @@ export default class Brands {
 
     constructor(data, db) {
 
+        // iterate through the data and product an array of brands
         const brands = data.map((abrand) => {
             return {
                 id: abrand.id,

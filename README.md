@@ -9,6 +9,20 @@ npm install
 ## To Run:
 npm run dev
 
+## To Use:
+API Available at http://localhost:8080/
+
+### Get Brands
+http://localhost:8080/brands
+
+### Get A Single Brand
+http://localhost:8080/brand/5a4e6d14-53d4-4583-bd6b-49f81b021d24
+
+### Get A Brand and it's products
+http://localhost:8080/brand/5a4e6d14-53d4-4583-bd6b-49f81b021d24/products
+
+
+
 ## Requirements
 
 Provide the following Services:
