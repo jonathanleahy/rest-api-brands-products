@@ -1,6 +1,8 @@
 import Brands from "./Brands";
 import Products from "./Products";
 import BrandsToProducts from "./BrandsToProducts";
+import Stores from "./Stores";
+import BrandsToStores from "./BrandsToStores";
 
 const fs = require('fs');
 var alasql = require('alasql');
@@ -31,6 +33,10 @@ export default class Huggg {
         this.db = new BrandsToProducts(dataParsed.data, this.db)
         // parse the products
         this.db = new Products(dataParsed.embedded.products, this.db)
+        // parse the stores
+        this.db = new Stores(dataParsed.embedded.stores, this.db)
+        // parse the brands to stores
+        this.db = new BrandsToStores(dataParsed.data, this.db)
     }
 
     /**
@@ -58,6 +64,44 @@ export default class Huggg {
         )
         // we're going to return combined brand details and the filtered products listings
         return {'Brand': brand[0], 'Products': productsByBrand}
+    }
+
+    /**
+     * Get the Stores, or One Store
+     */
+    getStore(id = null) {
+        return (id ?
+                this.db.exec('SELECT * FROM stores WHERE id like ? ORDER BY id DESC', [id])
+                :
+                this.db.exec("SELECT * FROM stores ORDER BY id DESC")
+        )
+    }
+
+    /**
+     * Get the Stores which belong to one Brand from the many-to-many
+     * Brands to Stores table and also pull the Store name from the
+     * Stores table
+     */
+    getStoresByBrand(brandId = null) {
+        const brand = this.getBrand(brandId)
+        const storesByBrand = (brandId ?
+                this.db.exec('SELECT storeId, stores.name FROM brandstostores, stores WHERE brandId like ? AND brandstostores.storeId = stores.id', [brandId])
+                :
+                {}
+        )
+        // we're going to return combined brand details and the filtered products listings
+        return {'Brand': brand[0], 'Stores': storesByBrand}
+    }
+
+    /**
+     * Get the Products, or One Product
+     */
+    getProduct(id = null) {
+        return (id ?
+                this.db.exec('SELECT * FROM products WHERE id like ? ORDER BY id DESC', [id])
+                :
+                this.db.exec("SELECT * FROM products ORDER BY id DESC")
+        )
     }
 
 }
